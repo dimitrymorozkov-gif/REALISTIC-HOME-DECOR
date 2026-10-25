@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "realistic_home_decor",
+  "version": "${version}",
+  "name": "Realistic Home Decor",
+  "description": "Original modern furniture and architectural decorations. Static models, precise collisions, multi-block placement, and a reusable resource generator.",
+  "authors": ["Realistic Home Decor contributors"],
+  "contact": {
+    "sources": "https://github.com/dimitrymorozkov-gif/REALISTIC-HOME-DECOR"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/realistic_home_decor/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.realistichomedecor.RealisticHomeDecor"],
+    "client": ["com.realistichomedecor.client.RealisticHomeDecorClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": ">=0.141.6+1.21.11"
+  }
+}

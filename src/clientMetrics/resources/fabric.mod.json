@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "rhd_client_metrics",
+  "version": "1.0.0",
+  "name": "Realistic Home Decor — development client metrics",
+  "description": "Development-only cached FPS and JVM heap samples. Excluded from the release JAR.",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.realistichomedecor.clientmetrics.ClientMetricsLogger"]
+  },
+  "depends": {
+    "fabricloader": ">=0.20.1",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*",
+    "realistic_home_decor": "*"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "rhd_smoke_test",
+  "version": "1.0.0",
+  "name": "Realistic Home Decor — dedicated-server integration checks",
+  "description": "Development-only placement, collision, registry and lifecycle checks. Never distributed with the mod.",
+  "environment": "server",
+  "entrypoints": {
+    "main": [
+      "com.realistichomedecor.smoke.FurnitureSmokeTests"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.17.3",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*",
+    "realistic_home_decor": "*"
+  }
+}

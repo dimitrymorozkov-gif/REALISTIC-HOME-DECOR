@@ -1,0 +1,145 @@
+{
+  "status": "complete",
+  "scope": "single diagnostic trial per scene, software renderer, no PC performance claim",
+  "minecraft": "1.21.11",
+  "origin": [
+    0,
+    81,
+    0
+  ],
+  "camera": [
+    82.5,
+    89,
+    172.5,
+    180,
+    5
+  ],
+  "warmup_seconds": 30,
+  "measurement_seconds": 60,
+  "intervals": [
+    {
+      "scene": 0,
+      "status": "complete",
+      "placement_request": {
+        "epoch_ms": 1792938807023,
+        "monotonic_ns": 22420572438577
+      },
+      "missing_cells": 0,
+      "warmup_start_epoch_ms": 1792938811147,
+      "measurement_server_log_offset": 13907,
+      "start_command": {
+        "epoch_ms": 1792938841149,
+        "monotonic_ns": 22454698957269
+      },
+      "measurement_start_epoch_ms": 1792938841250,
+      "measurement_end_epoch_ms": 1792938901255,
+      "measurement_monotonic_seconds": 60.005514169999515,
+      "stop_command": {
+        "epoch_ms": 1792938901256,
+        "monotonic_ns": 22514805072996
+      },
+      "tick_profile_log": "scene-0-profiler-console.log",
+      "detailed_profile_start": {
+        "epoch_ms": 1792938901358,
+        "monotonic_ns": 22514907708958
+      },
+      "detailed_profile_log": "scene-0-detailed-profile-console.log",
+      "debug_reports": [
+        "scene-0-server-debug/profiling/2026-10-25_14_35_12-world-1_21_11.zip"
+      ]
+    },
+    {
+      "scene": 100,
+      "status": "complete",
+      "placement_request": {
+        "epoch_ms": 1792938912410,
+        "monotonic_ns": 22525959744868
+      },
+      "missing_cells": 0,
+      "warmup_start_epoch_ms": 1792938915321,
+      "measurement_server_log_offset": 16244,
+      "start_command": {
+        "epoch_ms": 1792938945325,
+        "monotonic_ns": 22558874774040
+      },
+      "measurement_start_epoch_ms": 1792938945426,
+      "measurement_end_epoch_ms": 1792939005427,
+      "measurement_monotonic_seconds": 60.001908870999614,
+      "stop_command": {
+        "epoch_ms": 1792939005430,
+        "monotonic_ns": 22618979587315
+      },
+      "tick_profile_log": "scene-100-profiler-console.log",
+      "detailed_profile_start": {
+        "epoch_ms": 1792939005532,
+        "monotonic_ns": 22619081723963
+      },
+      "detailed_profile_log": "scene-100-detailed-profile-console.log",
+      "debug_reports": [
+        "scene-100-server-debug/profiling/2026-10-25_14_36_56-world-1_21_11.zip"
+      ]
+    },
+    {
+      "scene": 500,
+      "status": "complete",
+      "placement_request": {
+        "epoch_ms": 1792939016917,
+        "monotonic_ns": 22630466870984
+      },
+      "missing_cells": 0,
+      "warmup_start_epoch_ms": 1792939020029,
+      "measurement_server_log_offset": 18580,
+      "start_command": {
+        "epoch_ms": 1792939050036,
+        "monotonic_ns": 22663585111958
+      },
+      "measurement_start_epoch_ms": 1792939050138,
+      "measurement_end_epoch_ms": 1792939110139,
+      "measurement_monotonic_seconds": 60.001266336999834,
+      "stop_command": {
+        "epoch_ms": 1792939110140,
+        "monotonic_ns": 22723689975007
+      },
+      "tick_profile_log": "scene-500-profiler-console.log",
+      "detailed_profile_start": {
+        "epoch_ms": 1792939110242,
+        "monotonic_ns": 22723791633791
+      },
+      "detailed_profile_log": "scene-500-detailed-profile-console.log",
+      "debug_reports": [
+        "scene-500-server-debug/profiling/2026-10-25_14_38_41-world-1_21_11.zip"
+      ]
+    },
+    {
+      "scene": 1000,
+      "status": "complete",
+      "placement_request": {
+        "epoch_ms": 1792939121321,
+        "monotonic_ns": 22734870201867
+      },
+      "missing_cells": 0,
+      "warmup_start_epoch_ms": 1792939124227,
+      "measurement_server_log_offset": 20923,
+      "start_command": {
+        "epoch_ms": 1792939154228,
+        "monotonic_ns": 22767777385128
+      },
+      "measurement_start_epoch_ms": 1792939154328,
+      "measurement_end_epoch_ms": 1792939214331,
+      "measurement_monotonic_seconds": 60.002672100999916,
+      "stop_command": {
+        "epoch_ms": 1792939214332,
+        "monotonic_ns": 22827881492801
+      },
+      "tick_profile_log": "scene-1000-profiler-console.log",
+      "detailed_profile_start": {
+        "epoch_ms": 1792939214433,
+        "monotonic_ns": 22827982840610
+      },
+      "detailed_profile_log": "scene-1000-detailed-profile-console.log",
+      "debug_reports": [
+        "scene-1000-server-debug/profiling/2026-10-25_14_40_24-world-1_21_11.zip"
+      ]
+    }
+  ]
+}

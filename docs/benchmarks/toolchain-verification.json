@@ -1,0 +1,25 @@
+{
+  "minecraft": "1.21.11",
+  "java": "21.0.13+9",
+  "gradle": "9.2.1",
+  "loom": "1.14.10",
+  "fabric_loader": "0.20.1",
+  "fabric_api": "0.141.6+1.21.11",
+  "unit_tests_passed": 58,
+  "catalog_items": 320,
+  "block_cells": 540,
+  "categories": 11,
+  "models": 1150,
+  "textures": 38,
+  "smoke_assertions": 3921,
+  "smoke_actual_placements": 345,
+  "smoke_pass_marker": true,
+  "smoke_process_exit": 0,
+  "production_jar_bytes": 1228184,
+  "production_jar_sha256": "f6aee2b4eba2404348da070efbb8c20d56d0fc271440e01415004c5b4d51d1e8",
+  "dev_smoke_excluded_from_release": true,
+  "installation_script_repeatability_exit": 0,
+  "limitations": [
+    "Physical gaming GPU, shader/mod compatibility and Microsoft-account authentication were not tested; actual client and cloud metrics are documented separately."
+  ]
+}

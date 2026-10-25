@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "minecraft": "1.21.11",
+  "fabric_loader": "0.20.1",
+  "fabric_api": "0.141.6+1.21.11",
+  "fabric_installer": "1.1.2",
+  "artifact_sha256": "f6aee2b4eba2404348da070efbb8c20d56d0fc271440e01415004c5b4d51d1e8",
+  "ordinary_production_launcher": true,
+  "development_testmods_loaded": false,
+  "registered_items": 320,
+  "registered_cells": 540,
+  "registered_tabs": 11,
+  "native_scene_items": 1000,
+  "native_scene_cells_checked_per_pass": 1702,
+  "unique_catalog_ids_in_scene": 320,
+  "initial_placement_check": "passed",
+  "save_shutdown_restart_reload_check": "passed",
+  "multi_cell_destruction_cleanup": "passed",
+  "primary_destroy_cleanup": "passed",
+  "secondary_destroy_cleanup": "passed",
+  "installed_fabric_libraries_sha256_verified": 8
+}

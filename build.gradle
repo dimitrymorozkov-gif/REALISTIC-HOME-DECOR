@@ -1,0 +1,145 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+loom {
+    splitEnvironmentSourceSets()
+}
+
+// Development diagnostics are separate source sets and never enter the release JAR.
+sourceSets {
+    smokeTest {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+    }
+    clientMetrics {
+        compileClasspath += sourceSets.main.compileClasspath + sourceSets.main.output
+        compileClasspath += sourceSets.client.compileClasspath + sourceSets.client.output
+        runtimeClasspath += sourceSets.main.runtimeClasspath + sourceSets.main.output
+        runtimeClasspath += sourceSets.client.runtimeClasspath + sourceSets.client.output
+    }
+}
+
+loom {
+    mods {
+        realistic_home_decor {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+        rhd_smoke_test {
+            sourceSet sourceSets.smokeTest
+        }
+        rhd_client_metrics {
+            sourceSet sourceSets.clientMetrics
+        }
+    }
+    runs {
+        client {
+            client()
+            runDir 'run/client'
+        }
+        metricsClient {
+            client()
+            name 'Furniture cached FPS and heap measurement'
+            source sourceSets.clientMetrics
+            runDir 'run/metrics-client'
+        }
+        server {
+            server()
+            runDir 'run/server'
+            programArg 'nogui'
+        }
+        smokeServer {
+            server()
+            name 'Furniture server integration checks'
+            source sourceSets.smokeTest
+            runDir 'run/smoke-server'
+            programArg 'nogui'
+        }
+    }
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 21
+    options.encoding = 'UTF-8'
+}
+
+processResources {
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') {
+        expand 'version': project.version
+    }
+}
+
+// The generator runs only during development; no Python runtime is bundled in the mod.
+tasks.register('generateResources', Exec) {
+    group = 'realistic home decor'
+    description = 'Generate models, textures, blockstates, items, and the furniture catalog.'
+    workingDir project.projectDir
+    commandLine 'python3', 'tools/furniture_generator/generate.py'
+}
+
+tasks.register('validateResources', Exec) {
+    group = 'verification'
+    description = 'Validate generated resource references, identifiers, and localizations.'
+    dependsOn 'generateResources'
+    workingDir project.projectDir
+    commandLine 'python3', 'tools/validate_resources.py'
+}
+
+tasks.named('processResources') { dependsOn 'generateResources' }
+tasks.named('compileJava') { dependsOn 'generateResources' }
+tasks.register('unitPythonTests', Exec) {
+    group = 'verification'
+    description = 'Run generator and resource-validator regression tests.'
+    dependsOn 'generateResources'
+    workingDir project.projectDir
+    commandLine 'python3', '-m', 'unittest', 'discover', '-s', 'tests', '-v'
+}
+
+tasks.named('check') { dependsOn 'validateResources', 'unitPythonTests', 'smokeTestClasses', 'clientMetricsClasses' }
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+
+jar {
+    from('LICENSE') {
+        rename { "${it}_${project.base.archivesName.get()}" }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

@@ -1,0 +1,103 @@
+{
+  "date_utc": "2026-10-25",
+  "scope": "One diagnostic trial per scene using software OpenGL; not a gaming GPU benchmark",
+  "minecraft": "1.21.11",
+  "fabric_loader": "0.20.1",
+  "fabric_api": "0.141.6+1.21.11",
+  "jar_sha256": "f6aee2b4eba2404348da070efbb8c20d56d0fc271440e01415004c5b4d51d1e8",
+  "context": {
+    "epoch_ms": 1792938423399,
+    "gpu_renderer": "llvmpipe (LLVM 19.1.7, 256 bits)",
+    "gpu_vendor": "Mesa",
+    "opengl_version": "4.5 (Core Profile) Mesa 25.0.7-2+deb13u1",
+    "software_renderer_detected": true,
+    "width_pixels": 1280,
+    "height_pixels": 900,
+    "render_distance_chunks": 16,
+    "simulation_distance_chunks": 12,
+    "fps_limit": 260,
+    "vsync": false,
+    "particles": "ALL",
+    "gui_scale_option": 2,
+    "fps_measurement": "Minecraft.getFps cached counter sampled at most once per second; not frame-time percentiles"
+  },
+  "warmup_seconds": 30,
+  "nominal_measurement_seconds": 60,
+  "camera": [
+    82.5,
+    89,
+    172.5,
+    180,
+    5
+  ],
+  "cgroup_memory_bytes": 34359738368,
+  "cgroup_cpu_quota": "400000 100000",
+  "scenes": [
+    {
+      "scene_items": 0,
+      "expected_furniture_cells": 0,
+      "missing_cells": 0,
+      "measurement_seconds": 60.005514169999515,
+      "sample_count": 58,
+      "mean_sampled_cached_fps": 14.483,
+      "min_sampled_cached_fps": 5,
+      "max_sampled_cached_fps": 17,
+      "heap_used_mib_min": 375.584,
+      "heap_used_mib_max": 595.584,
+      "server_tick_profile_seconds": 60.1,
+      "server_tick_count": 1203,
+      "server_reported_tps": 20.02
+    },
+    {
+      "scene_items": 100,
+      "expected_furniture_cells": 174,
+      "missing_cells": 0,
+      "measurement_seconds": 60.001908870999614,
+      "sample_count": 58,
+      "mean_sampled_cached_fps": 13.517,
+      "min_sampled_cached_fps": 5,
+      "max_sampled_cached_fps": 17,
+      "heap_used_mib_min": 335.532,
+      "heap_used_mib_max": 549.755,
+      "server_tick_profile_seconds": 60.05,
+      "server_tick_count": 1202,
+      "server_reported_tps": 20.02
+    },
+    {
+      "scene_items": 500,
+      "expected_furniture_cells": 852,
+      "missing_cells": 0,
+      "measurement_seconds": 60.001266336999834,
+      "sample_count": 58,
+      "mean_sampled_cached_fps": 13.724,
+      "min_sampled_cached_fps": 11,
+      "max_sampled_cached_fps": 15,
+      "heap_used_mib_min": 322.944,
+      "heap_used_mib_max": 887.532,
+      "server_tick_profile_seconds": 60.05,
+      "server_tick_count": 1202,
+      "server_reported_tps": 20.02
+    },
+    {
+      "scene_items": 1000,
+      "expected_furniture_cells": 1702,
+      "missing_cells": 0,
+      "measurement_seconds": 60.002672100999916,
+      "sample_count": 58,
+      "mean_sampled_cached_fps": 12.379,
+      "min_sampled_cached_fps": 9,
+      "max_sampled_cached_fps": 14,
+      "heap_used_mib_min": 530.944,
+      "heap_used_mib_max": 736.944,
+      "server_tick_profile_seconds": 60.05,
+      "server_tick_count": 1202,
+      "server_reported_tps": 20.02
+    }
+  ],
+  "limitations": [
+    "Cached Minecraft FPS counter sampled approximately once a second; no per-frame timings or 1% low.",
+    "One trial only; no physical gaming GPU.",
+    "Heap samples include garbage collection and cannot establish isolated furniture memory cost.",
+    "Vanilla /perf profiles were collected after FPS windows; full tick cycle timings must not be called CPU MSPT."
+  ]
+}
