@@ -12,11 +12,12 @@ python3 tools/validate_resources.py
 item definitions, loot tables, English/Russian names, 64×64 PNG material library
 and catalog documentation. All artwork and geometry in this project is original.
 Its JSON is deterministic, sorted and compact. It uses a common geometric parent
-for all four coordinated material palettes instead of copying the same geometry.
+for all eight coordinated material palettes instead of copying the same geometry.
 
 The development checkpoints `--stage first-five` and `--stage first-twenty` select
-the initial five and twenty *constructions*. Each construction has four palettes.
-The default `--stage full` contains 80 constructions and 320 inventory items.
+the initial five and twenty *constructions*. Each construction has eight palettes.
+The default `--stage full` contains 120 constructions and 960 inventory items:
+80 existing furniture/architecture designs plus 40 new structural wall designs.
 Use the same stage with `--check` when checking a checkpoint.
 
 Generated files are listed with SHA256 hashes in `generated_manifest.json`.
@@ -26,8 +27,9 @@ when their recorded hashes still match. `--check` compares without writing.
 
 ## Add or change a construction
 
-Edit `templates.py` (interior furniture) or `extras.py` (architecture/outdoor).
-Both expose `designs()`, returning dictionaries with:
+Edit `templates.py` (interior furniture), `extras.py` (architecture/outdoor), or
+`walls.py` and its `wall_patterns.py` helpers (structural wall relief).
+Each exposes `designs()`, returning dictionaries with:
 
 ```python
 {
@@ -55,8 +57,40 @@ keeping every block model and collision box inside its own cell. It normalizes
 the complete object for the inventory preview.
 
 Material roles: `wood`, `fabric`, `stone`, `metal`, `accent`, `ceramic`, `glass`,
-`screen`, `leaf`, `light`, `book`, `concrete`. Shared patterns and RGB values live
-in `MATERIALS`; four curated combinations live in `PALETTES` in `generate.py`.
+`screen`, `leaf`, `light`, `book`, `concrete`, `mortar`, `plaster`, and `trim`.
+Shared patterns and RGB values live in `MATERIALS`; eight curated combinations
+live in `PALETTES` in `generate.py`: `oak`, `walnut`, `ebony`, `ivory`, `sage`,
+`terracotta`, `sand`, and `slate`. `palette_textures()` rejects missing materials
+and the compiler rejects unmapped roles before writing any resource files.
+Choose a role that matches the real surface: plaster uses a matte mineral
+material, not a wood-grain texture with a different label. Optional `particle`
+selects the material role for breaking particles; new walls use their front
+surface instead of the default furniture wood. Optional `wall_family` is catalog
+metadata for the generated wall guide and does not add a runtime mechanic.
+
+Original palette IDs, original item IDs and original names are retained. The
+original five furniture-role mappings (`wood`, `fabric`, `stone`, `metal`,
+`accent`) and every original PNG are retained too. Ceramic and concrete now
+have palette-specific glazed/mineral materials, so previously identical vases,
+tile panels and concrete variants actually differ. `oak` preserves the original
+ceramic/concrete materials; the other original IDs intentionally gain coordinated
+cream, graphite and ivory surfaces. See `docs/PALETTES.md` for the exact matrix.
+
+The forty `wall_` constructions are different geometric patterns rather than
+forty recolorings of the same flat model. They use one-cell solids with mineral
+cores and front relief, `building_materials` category and `placement: any` so a
+wall can be stacked without a backing support. Their original eight material
+variants reuse each pattern's geometric parent. See `docs/WALLS.md` for IDs and
+families. Wall designs are appended after the original eighty constructions,
+preserving the first-five and first-twenty checkpoint design sets.
+
+Only these structural walls use a normal full-cell 1×1×1 m collision and selection
+shape; their shallow front relief remains in the JSON model. This gives vanilla
+smooth and flat lighting the ordinary outside-face samples for solid blocks,
+while blocking skylight and block light. There is no custom renderer, dynamic
+shape classification, light emission or permanently bright surface. Existing
+furniture keeps its detailed per-part collision shapes.
+
 Glass uses true alpha and a `translucent` catalog render layer. Furniture has no
 custom renderer, animation, block entity or continuously running ticks. Neighbor
 and chunk-load events schedule a one-shot integrity check when necessary.

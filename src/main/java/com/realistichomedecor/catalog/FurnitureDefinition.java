@@ -9,7 +9,7 @@ import java.util.Map;
 /** Immutable, validated data shared by registration, placement and shape caches. */
 public record FurnitureDefinition(String id, String template, String category,
                                   Placement placement, int luminance, boolean connect,
-                                  String renderLayer, List<Part> parts) {
+                                  String renderLayer, boolean structuralWall, List<Part> parts) {
     public FurnitureDefinition {
         parts = List.copyOf(parts);
     }

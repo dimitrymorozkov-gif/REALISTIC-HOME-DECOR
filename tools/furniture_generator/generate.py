@@ -17,6 +17,7 @@ import zlib
 
 from templates import designs as furniture_designs
 from extras import designs as extra_designs
+from walls import designs as wall_designs
 
 ROOT = Path(__file__).resolve().parents[2]
 NS = 'realistic_home_decor'
@@ -52,12 +53,50 @@ MATERIALS = {
     'plaster': ('matte',(220,215,202)), 'screen': ('screen',(24,42,50)),
     'leaf': ('leaf',(65,110,64)), 'warm_light': ('gloss',(255,235,183)),
     'book_pages': ('paper',(223,210,177)),
+    # The original material definitions above deliberately remain byte-stable.
+    # Additional shared materials broaden the collection without per-item PNGs.
+    'sage_linen': ('fabric',(130,154,132)), 'sage_velvet': ('fabric',(79,112,89)),
+    'sage_terrazzo': ('granite',(165,177,159)), 'sage_metal': ('matte',(90,112,101)),
+    'terracotta_cotton': ('fabric',(185,111,82)), 'terracotta_stone': ('stone',(170,105,76)),
+    'copper': ('metal',(179,106,64)), 'sand_linen': ('fabric',(218,198,156)),
+    'sand_limestone': ('stone',(216,199,161)), 'champagne_aluminium': ('metal',(191,165,113)),
+    'cream_wool': ('fabric',(235,222,193)), 'smoked_wood': ('wood',(83,94,103)),
+    'slate_wool': ('fabric',(98,117,139)), 'blue_slate': ('stone',(80,99,119)),
+    'gunmetal': ('metal',(66,80,97)), 'steel_blue_cotton': ('fabric',(144,168,183)),
+    'oat_grout': ('matte',(148,134,111)), 'warm_grout': ('matte',(124,104,79)),
+    'charcoal_grout': ('matte',(53,57,60)), 'ivory_grout': ('matte',(194,186,168)),
+    'sage_grout': ('matte',(84,96,81)), 'clay_grout': ('matte',(115,76,57)),
+    'sand_grout': ('matte',(153,137,107)), 'slate_grout': ('matte',(48,59,75)),
+    'warm_plaster': ('matte',(206,190,164)), 'charcoal_plaster': ('matte',(84,89,91)),
+    'ivory_plaster': ('matte',(238,233,219)), 'sage_plaster': ('matte',(179,194,167)),
+    'clay_plaster': ('matte',(204,137,105)), 'sand_plaster': ('matte',(231,217,185)),
+    'slate_plaster': ('matte',(140,155,177)),
+    'warm_concrete': ('granite',(170,148,120)), 'charcoal_concrete': ('granite',(75,79,82)),
+    'ivory_concrete': ('granite',(214,209,192)), 'sage_concrete': ('granite',(153,166,146)),
+    'clay_concrete': ('granite',(187,124,95)), 'sand_concrete': ('granite',(199,182,146)),
+    'slate_concrete': ('granite',(102,117,136)),
+    'cream_ceramic': ('gloss',(215,195,165)), 'graphite_ceramic': ('gloss',(68,75,78)),
+    'ivory_ceramic': ('gloss',(244,240,228)), 'sage_ceramic': ('gloss',(145,170,144)),
+    'clay_ceramic': ('gloss',(196,112,83)), 'sand_ceramic': ('gloss',(226,207,164)),
+    'slate_ceramic': ('gloss',(108,130,154)),
 }
 PALETTES = {
- 'oak': dict(en='Natural oak',ru='Натуральный дуб',wood='light_oak',fabric='linen',stone='white_marble',metal='black_metal',accent='velvet'),
- 'walnut': dict(en='Walnut & brass',ru='Орех и латунь',wood='walnut',fabric='leather',stone='travertine',metal='brass',accent='cotton'),
- 'ebony': dict(en='Ebony & charcoal',ru='Эбен и графит',wood='ebony',fabric='dark_upholstery',stone='black_marble',metal='stainless_steel',accent='matte_plastic'),
- 'ivory': dict(en='Ivory & birch',ru='Слоновая кость и берёза',wood='bleached_wood',fabric='light_upholstery',stone='grey_marble',metal='chrome',accent='birch'),
+ 'oak': dict(en='Natural oak',ru='Натуральный дуб',wood='light_oak',fabric='linen',stone='white_marble',metal='black_metal',accent='velvet',
+             mortar='oat_grout',plaster='plaster',trim='light_oak',concrete='concrete',ceramic='ceramic'),
+ 'walnut': dict(en='Walnut & brass',ru='Орех и латунь',wood='walnut',fabric='leather',stone='travertine',metal='brass',accent='cotton',
+                mortar='warm_grout',plaster='warm_plaster',trim='walnut',concrete='warm_concrete',ceramic='cream_ceramic'),
+ 'ebony': dict(en='Ebony & charcoal',ru='Эбен и графит',wood='ebony',fabric='dark_upholstery',stone='black_marble',metal='stainless_steel',accent='matte_plastic',
+               mortar='charcoal_grout',plaster='charcoal_plaster',trim='black_metal',concrete='charcoal_concrete',ceramic='graphite_ceramic'),
+ 'ivory': dict(en='Ivory & birch',ru='Слоновая кость и берёза',wood='bleached_wood',fabric='light_upholstery',stone='grey_marble',metal='chrome',accent='birch',
+               mortar='ivory_grout',plaster='ivory_plaster',trim='bleached_wood',concrete='ivory_concrete',ceramic='ivory_ceramic'),
+ 'sage': dict(en='Sage & pine',ru='Шалфей и сосна',wood='pine',fabric='sage_linen',stone='sage_terrazzo',metal='sage_metal',accent='sage_velvet',
+              mortar='sage_grout',plaster='sage_plaster',trim='pine',concrete='sage_concrete',ceramic='sage_ceramic'),
+ 'terracotta': dict(en='Terracotta & copper',ru='Терракота и медь',wood='dark_oak',fabric='terracotta_cotton',stone='terracotta_stone',metal='copper',accent='sand_linen',
+                    mortar='clay_grout',plaster='clay_plaster',trim='copper',concrete='clay_concrete',ceramic='clay_ceramic'),
+ 'sand': dict(en='Sand & champagne',ru='Песок и шампань',wood='natural_veneer',fabric='sand_linen',stone='sand_limestone',metal='champagne_aluminium',accent='cream_wool',
+              mortar='sand_grout',plaster='sand_plaster',trim='natural_veneer',concrete='sand_concrete',ceramic='sand_ceramic'),
+ 'slate': dict(en='Slate & steel blue',ru='Сланец и стальной синий',wood='smoked_wood',fabric='slate_wool',stone='blue_slate',metal='gunmetal',accent='steel_blue_cotton',
+               mortar='slate_grout',plaster='slate_plaster',trim='aluminium',concrete='slate_concrete',ceramic='slate_ceramic'),
 }
 FIXED = dict(ceramic='ceramic',glass='glass',screen='screen',leaf='leaf',light='warm_light',book='book_pages',concrete='concrete')
 
@@ -158,7 +197,9 @@ def icon():
 
 
 def all_designs():
-    collection=furniture_designs()+extra_designs()
+    # Keep the existing eighty constructions first so development checkpoints
+    # and every published item ID remain stable as the collection grows.
+    collection=furniture_designs()+extra_designs()+wall_designs()
     # Ensure wall-mounted cabinet carcasses meet their supporting plane.
     for d in collection:
         if d['id'] in ('upper_cabinet','wall_sink'):
@@ -168,7 +209,19 @@ def all_designs():
             d['connect']=True
         if d['id']=='parquet_floor':
             d['en']='Plank parquet panel'; d['ru']='Панель дощатого паркета'
+    identifiers=[design['id'] for design in collection]
+    if len(identifiers)!=len(set(identifiers)):
+        raise ValueError('Construction identifiers must be unique')
     return collection
+
+
+def palette_textures(palette):
+    """Resolve every material role to an existing shared texture, never a label."""
+    materials=FIXED|{role:material for role,material in PALETTES[palette].items() if role not in ('en','ru')}
+    missing=set(materials.values())-set(MATERIALS)
+    if missing:
+        raise ValueError(f'Palette {palette} uses unknown materials: {sorted(missing)}')
+    return {role:f'{NS}:block/{material}' for role,material in materials.items()}
 
 
 def compile_resources(stage='full'):
@@ -184,10 +237,15 @@ def compile_resources(stage='full'):
         for language,text in zip(('en_us','ru_ru'),names): locales[language][f'itemGroup.{NS}.{cat}']=text
     locales['en_us'][f'message.{NS}.no_space']='Not enough space for this furniture.'
     locales['ru_ru'][f'message.{NS}.no_space']='Недостаточно места для этой мебели.'
-    default_tex={role:f'{NS}:block/{mat}' for role,mat in (FIXED|{k:v for k,v in PALETTES['oak'].items() if k not in ('en','ru')}).items()}
+    default_tex=palette_textures('oak')
     for design in collection:
         boxes=design['boxes']; template=design['id']; connected=design['connect']
         assert template and boxes and all(all(b[i+3]>b[i]>=0 for i in range(3)) for b in boxes),template
+        particle=design.get('particle','wood')
+        used_roles={box[6] for box in boxes}|{particle}
+        unknown_roles=used_roles-set(default_tex)
+        if unknown_roles:
+            raise ValueError(f'{template} uses unknown material roles: {sorted(unknown_roles)}')
         dimensions=[math.ceil(max(b[i+3] for b in boxes)/16) for i in range(3)]
         offsets=[(x,y,z) for y in range(dimensions[1]) for z in range(dimensions[2]) for x in range(dimensions[0]) if clipped(boxes,(x,y,z))]
         assert (0,0,0) in offsets,template
@@ -197,20 +255,24 @@ def compile_resources(stage='full'):
             for left,right in ((False,False),(True,False),(False,True),(True,True)) if connected else [(False,False)]:
                 tag=f'_l{int(left)}r{int(right)}' if connected else ''
                 suffix=f'_part_{index}' if index else ''
-                put(ASSET/'models/block'/f'{template}_shape{suffix}{tag}.json',{'ambientocclusion':True,'textures':default_tex|{'particle':default_tex['wood']},'elements':[cube_element(b,cull=True) for b in visible(cell,left,right)]})
+                put(ASSET/'models/block'/f'{template}_shape{suffix}{tag}.json',{'ambientocclusion':True,'textures':default_tex|{'particle':default_tex[particle]},'elements':[cube_element(b,cull=True) for b in visible(cell,left,right)]})
         # Inventory models contain the entire object. Normalize all axes equally
         # into one model cube so large furniture never exceeds vanilla bounds.
         scale=min(1,16/max(max(b[i+3] for b in boxes) for i in range(3)))
-        put(ASSET/'models/item'/f'{template}_shape.json',{'parent':'minecraft:block/block','textures':default_tex|{'particle':default_tex['wood']},'elements':[cube_element(b,scale) for b in boxes],
+        put(ASSET/'models/item'/f'{template}_shape.json',{'parent':'minecraft:block/block','textures':default_tex|{'particle':default_tex[particle]},'elements':[cube_element(b,scale) for b in boxes],
           'display':{'gui':{'rotation':[30,225,0],'translation':[0,0,0],'scale':[.8,.8,.8]},'ground':{'rotation':[0,0,0],'translation':[0,3,0],'scale':[.4,.4,.4]},'fixed':{'rotation':[0,0,0],'translation':[0,0,0],'scale':[.65,.65,.65]}}})
         for palette,values in PALETTES.items():
             identifier=f'{template}_{palette}'
-            tex={role:f'{NS}:block/{mat}' for role,mat in (FIXED|{k:v for k,v in values.items() if k not in ('en','ru')}).items()}
+            tex=palette_textures(palette)
             parts=[]
             for index,offset in enumerate(offsets):
                 suffix=f'_part_{index}' if index else ''
                 part_id=identifier+suffix; cell=clipped(boxes,offset)
-                part={'id':part_id,'offset':list(offset),'boxes':collision(cell)}
+                # Structural walls are ordinary solid one-metre building cells.
+                # Relief stays in the baked model, while full-cell physics also
+                # gives vanilla AO/flat rendering correct outside-face lighting.
+                part_boxes=[[0,0,0,16,16,16]] if 'wall_family' in design else collision(cell)
+                part={'id':part_id,'offset':list(offset),'boxes':part_boxes}
                 if connected:
                     part['connection_boxes']={f'{str(l).lower()}_{str(r).lower()}':collision(visible(cell,l,r)) for l,r in ((False,False),(True,False),(False,True),(True,True))}
                 parts.append(part)
@@ -218,7 +280,7 @@ def compile_resources(stage='full'):
                 for left,right in ((False,False),(True,False),(False,True),(True,True)) if connected else [(False,False)]:
                     tag=f'_l{int(left)}r{int(right)}' if connected else ''
                     model_id=part_id+tag
-                    put(ASSET/'models/block'/f'{model_id}.json',{'parent':f'{NS}:block/{template}_shape{suffix}{tag}','textures':tex|{'particle':tex['wood']}})
+                    put(ASSET/'models/block'/f'{model_id}.json',{'parent':f'{NS}:block/{template}_shape{suffix}{tag}','textures':tex|{'particle':tex[particle]}})
                     for facing,angle in zip(('north','east','south','west'),(0,90,180,270)):
                         key=f'facing={facing}'+(f',left={str(left).lower()},right={str(right).lower()}' if connected else '')
                         variants[key]={'model':f'{NS}:block/{model_id}','y':angle,'uvlock':False}
@@ -226,20 +288,46 @@ def compile_resources(stage='full'):
                 loot={'type':'minecraft:block','pools':[]}
                 if index==0: loot['pools']=[{'rolls':1,'entries':[{'type':'minecraft:item','name':f'{NS}:{identifier}'}],'conditions':[{'condition':'minecraft:survives_explosion'}]}]
                 put(DATA/'loot_table/blocks'/f'{part_id}.json',loot)
-            put(ASSET/'models/item'/f'{identifier}.json',{'parent':f'{NS}:item/{template}_shape','textures':tex|{'particle':tex['wood']}})
+            put(ASSET/'models/item'/f'{identifier}.json',{'parent':f'{NS}:item/{template}_shape','textures':tex|{'particle':tex[particle]}})
             put(ASSET/'items'/f'{identifier}.json',{'model':{'type':'minecraft:model','model':f'{NS}:item/{identifier}'}})
             names={lang:f"{design[key]} — {values[lang[:2] if lang=='en_us' else 'ru']}" for lang,key in [('en_us','en'),('ru_ru','ru')]}
             for language,name in names.items(): locales[language][f'block.{NS}.{identifier}']=name
-            entries.append({'id':identifier,'template':template,'category':design['category'],'names':names,'placement':design['placement'],'luminance':design['luminance'],'connect':connected,'material':palette,'render_layer':'translucent' if any(b[6]=='glass' for b in boxes) else 'solid','parts':parts})
+            entry={'id':identifier,'template':template,'category':design['category'],'names':names,'placement':design['placement'],'luminance':design['luminance'],'connect':connected,'material':palette,'render_layer':'translucent' if any(b[6]=='glass' for b in boxes) else 'solid','parts':parts}
+            if 'wall_family' in design:
+                entry['wall_family']=design['wall_family']
+            entries.append(entry)
     put(DATA/'catalog.json',{'schema_version':1,'entries':entries})
     for language,locale in locales.items(): put(ASSET/'lang'/f'{language}.json',locale)
     put(Path('tools/furniture_generator/materials/materials.json'),{'materials':{name:{'pattern':kind,'rgb':list(color),'resolution':64,'texture':f'{NS}:block/{name}'} for name,(kind,color) in MATERIALS.items()},'palettes':PALETTES})
-    catalog=['# Каталог Realistic Home Decor','',f'{len(collection)} разных конструкций × {len(PALETTES)} согласованных палитры = **{len(entries)} предметов**.','', 'Палитры: натуральный дуб; орех и латунь; эбен и графит; слоновая кость и берёза.','', '| ID конструкции | English | Русский | Категория | Ячеек |','|---|---|---|---|---:|']
+    palette_names='; '.join(f"{values['ru']} (`{key}`)" for key,values in PALETTES.items())
+    catalog=['# Каталог Realistic Home Decor','',f'{len(collection)} разных конструкций × {len(PALETTES)} согласованных палитр = **{len(entries)} предметов**.','',f'Палитры: {palette_names}.','', '| ID конструкции | English | Русский | Категория | Ячеек |','|---|---|---|---|---:|']
     for d in collection:
         n=len(next(e for e in entries if e['template']==d['id'])['parts'])
         catalog.append(f"| `{d['id']}` | {d['en']} | {d['ru']} | {d['category']} | {n} |")
     catalog+=['','Полный ID предмета: `realistic_home_decor:<конструкция>_<палитра>`. Например: `realistic_home_decor:modern_chair_oak`.','', 'Мебель декоративная. Крупная мебель занимает перечисленные ячейки; модели и коллизии разбиты по ячейкам. Поддерживаются повороты на 90°. Секции дивана, кухонные и навесные шкафы, стеновые панели и перила соединяются с такой же конструкцией и палитрой при одинаковом направлении.']
     put(Path('docs/CATALOG.md'),('\n'.join(catalog)+'\n').encode())
+    walls=[design for design in collection if 'wall_family' in design]
+    wall_guide=['# Стеновые конструкции','',f'**{len(walls)} разных рельефных конструкций × {len(PALETTES)} палитр = {len(walls)*len(PALETTES)} блоков стен.**','',
+                'Все конструкции находятся во вкладке Building Materials / Строительные материалы. Каждый блок занимает одну ячейку, имеет собственную объёмную кладку или панельный рельеф и поворачивается при размещении. Стены можно строить друг на друге; опора сзади не требуется. Декоративная лицевая сторона модели NORTH направлена к северу, Z=0.','',
+                'Общая основа использует согласованный материал швов `mortar`, лицевая поверхность — дерево, камень, штукатурку, бетон или металл, рамки — `trim`. Палитры изменяют настоящие материалы видимой поверхности; одни только названия не создают варианты.','',
+                'Физическая коллизия и рамка выделения новых строительных стен занимают полную ячейку 1×1×1 м, как у обычных строительных блоков Minecraft. Неглубокий рельеф сохранён в модели. Стены непрозрачны для света; полноценная ячейка обеспечивает стандартное освещение утопленных граней без собственного рендера или свечения. Это правило применяется только к 40 новым стеновым конструкциям: прежняя мебель сохраняет свои точные коллизии.','',
+                '| ID конструкции | English | Русский | Семейство |','|---|---|---|---|']
+    for design in walls:
+        wall_guide.append(f"| `{design['id']}` | {design['en']} | {design['ru']} | {design.get('wall_family','wall')} |")
+    wall_guide+=['','ID блока: `realistic_home_decor:<конструкция>_<палитра>`, например `realistic_home_decor:wall_running_brick_terracotta`.','',
+                 f'Доступные палитры: {palette_names}.']
+    put(Path('docs/WALLS.md'),('\n'.join(wall_guide)+'\n').encode())
+    palette_guide=['# Палитры материалов','',f'В коллекции **{len(PALETTES)} палитр** и **{len(MATERIALS)} общих материалов 64×64**. Текстуры генерируются детерминированно и переиспользуются всеми конструкциями.','',
+                   '| ID | Название | Дерево | Ткань | Камень | Металл | Керамика | Бетон | Швы | Штукатурка | Рамки |',
+                   '|---|---|---|---|---|---|---|---|---|---|---|']
+    for key,values in PALETTES.items():
+        roles=' | '.join(f"`{values[role]}`" for role in ('wood','fabric','stone','metal','ceramic','concrete','mortar','plaster','trim'))
+        palette_guide.append(f"| `{key}` | {values['ru']} | {roles} |")
+    palette_guide+=['','Первоначальные ID палитр `oak`, `walnut`, `ebony`, `ivory` и все ранее опубликованные ID предметов сохранены. Их названия и материалы дерева, ткани, камня, металла и акцентов сохранены. Все первоначальные PNG остаются неизменными.','',
+                    'Керамика и бетон теперь согласованы с каждой палитрой: например, графитовая глазурь для `ebony`, кремовая для `walnut`, светлая фарфоровая для `ivory`. Палитра `oak` сохраняет первоначальные керамику и бетон. Это намеренное визуальное обновление уже существовавших предметов с прежними ID, чтобы вазы, плитка и бетонные блоки различались материалом, а не только именем.','',
+                    'Новые схемы: `sage` — сосна и приглушённый шалфей; `terracotta` — тёмный дуб, глина и медь; `sand` — натуральный шпон, известняк и шампань; `slate` — дымчатое дерево, синий сланец и тёмная сталь.','',
+                    'Фиксированные функционально узнаваемые поверхности (стекло, экраны, зелень, страницы книг и тёплые лампы) остаются общими. Разнообразие дают материалы реально видимых частей мебели и стен.']
+    put(Path('docs/PALETTES.md'),('\n'.join(palette_guide)+'\n').encode())
     return output,entries
 
 

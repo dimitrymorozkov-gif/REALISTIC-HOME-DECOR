@@ -88,6 +88,18 @@ public class FurnitureBlock extends Block {
     }
 
     @Override
+    protected int getLightBlock(BlockState state) {
+        // Shallow relief grooves do not turn a structural wall into a window.
+        // Keep the actual outline/collision geometry and normal furniture light.
+        return definition.structuralWall() ? 15 : super.getLightBlock(state);
+    }
+
+    @Override
+    protected boolean propagatesSkylightDown(BlockState state) {
+        return !definition.structuralWall() && super.propagatesSkylightDown(state);
+    }
+
+    @Override
     protected BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }

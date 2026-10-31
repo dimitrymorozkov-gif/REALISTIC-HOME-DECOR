@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,6 +43,8 @@ import java.util.Set;
 public final class FurnitureSmokeTests implements ModInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger("rhd_smoke_test");
     private static final BlockPos ORIGIN = new BlockPos(8, 200, 8);
+    private static final BlockPos BLOCK_LIGHT_BARRIER = new BlockPos(24, 220, 9);
+    private static final BlockPos SKY_LIGHT_BARRIER = new BlockPos(20, 234, 8);
     private static final List<Direction> FACINGS = List.of(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
     private final ArrayDeque<Step> steps = new ArrayDeque<>();
     private ServerLevel level;
@@ -93,6 +96,7 @@ public final class FurnitureSmokeTests implements ModInitializer {
         for (BlockPos position : BlockPos.betweenClosed(-1, 196, -1, 25, 212, 25)) {
             level.setBlock(position, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
         }
+        assertLightingCaches();
         started = true;
         LOGGER.info("RHD_SMOKE_START catalog={} block_cells={}", catalog.size(), parts);
     }
@@ -210,6 +214,126 @@ public final class FurnitureSmokeTests implements ModInitializer {
             cleanup(multi, crossing, boundary);
             removeDrops();
         }));
+        queueLightingTests();
+    }
+
+    /** Inspect the actual cached states consumed by both vanilla light engines. */
+    private void assertLightingCaches() {
+        int structuralItems = 0;
+        int structuralStates = 0;
+        int preservedStates = 0;
+        int transparentStates = 0;
+        int oldWallFurniture = 0;
+        Set<String> existingWallFurniture = Set.of("wall_clock", "wall_panel", "wall_sconce", "wall_shelf", "wall_sink");
+        for (FurnitureDefinition definition : catalog) {
+            if (existingWallFurniture.contains(definition.template())) {
+                check(!definition.structuralWall(), definition.id() + ": existing wall-mounted furniture is not a structural wall");
+                oldWallFurniture++;
+            }
+            if (definition.structuralWall()) structuralItems++;
+            for (FurnitureDefinition.Part part : definition.parts()) {
+                FurnitureBlock block = ModBlocks.getBlock(part.id());
+                for (BlockState state : block.getStateDefinition().getPossibleStates()) {
+                    VoxelShape actualShape = state.getShape(level, ORIGIN);
+                    if (definition.structuralWall()) {
+                        check(state.getLightBlock() == 15, part.id() + ": structural wall blocks all incoming light facing " + state.getValue(FurnitureBlock.FACING));
+                        check(!state.propagatesSkylightDown(), part.id() + ": structural wall stops direct skylight");
+                        check(Block.isShapeFullBlock(actualShape), part.id() + ": structural wall has normal full-cell selection geometry");
+                        check(state.canOcclude(), part.id() + ": structural wall participates in ordinary face occlusion");
+                        check(state.isSolidRender(), part.id() + ": structural wall retains its solid rendering classification");
+                        check(state.isCollisionShapeFullBlock(level, ORIGIN), part.id() + ": structural wall has normal full-cell collision classification");
+                        VoxelShape collision = state.getCollisionShape(level, ORIGIN);
+                        check(Block.isShapeFullBlock(collision), part.id() + ": structural wall has normal full-cell physical collision");
+                        VoxelShape expected = Shapes.empty();
+                        for (Box box : part.boxes(false, false)) {
+                            expected = Shapes.or(expected, independentlyRotatedBox(box, state.getValue(FurnitureBlock.FACING)));
+                        }
+                        check(!Shapes.joinIsNotEmpty(expected, collision, BooleanOp.NOT_SAME),
+                                part.id() + ": complete physical collision matches the independently rotated catalog collision boxes");
+                        structuralStates++;
+                    } else {
+                        boolean expectedSky = !Block.isShapeFullBlock(actualShape) && state.getFluidState().isEmpty();
+                        int expectedOpacity = state.isSolidRender() ? 15 : expectedSky ? 0 : 1;
+                        check(state.propagatesSkylightDown() == expectedSky, part.id() + ": existing furniture retains vanilla skylight behavior");
+                        check(state.getLightBlock() == expectedOpacity, part.id() + ": existing furniture retains vanilla light attenuation");
+                        preservedStates++;
+                        if (definition.renderLayer().equals("translucent") && expectedOpacity == 0) transparentStates++;
+                    }
+                }
+            }
+        }
+        check(structuralItems == 320, "All 40 structural wall constructions in eight palettes receive lighting checks");
+        check(structuralStates == 320 * 4, "Every structural wall is checked in all four saved orientations");
+        check(oldWallFurniture == 5 * 8, "All five existing wall-furniture types retain their eight palette variants");
+        check(transparentStates > 0, "Transparent shower/window/glass furniture still has light-transmitting states");
+        LOGGER.info("RHD_SMOKE_LIGHT_CACHES structural_items={} structural_states={} preserved_furniture_states={} transparent_states={}",
+                structuralItems, structuralStates, preservedStates, transparentStates);
+    }
+
+    /**
+     * Exercise actual asynchronous vanilla lighting, with glass positive controls.
+     * Stone enclosures leave exactly one route from each source to its target;
+     * no test relies solely on a block property or an open outdoor light sample.
+     */
+    private void queueLightingTests() {
+        FurnitureDefinition wall = catalog.stream().filter(FurnitureDefinition::structuralWall).findFirst().orElseThrow();
+        steps.add(new Step(0, () -> {
+            // A sealed 3x3x5 stone tunnel: glowstone -> wall -> target air.
+            for (BlockPos position : BlockPos.betweenClosed(23, 219, 7, 25, 221, 11)) {
+                boolean boundary = position.getX() == 23 || position.getX() == 25
+                        || position.getY() == 219 || position.getY() == 221
+                        || position.getZ() == 7 || position.getZ() == 11;
+                setLightingFixture(position, boundary ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState());
+            }
+            setLightingFixture(BLOCK_LIGHT_BARRIER.north(), Blocks.GLOWSTONE.defaultBlockState());
+            setLightingFixture(BLOCK_LIGHT_BARRIER, ModBlocks.getBlock(wall.id()).defaultBlockState().setValue(FurnitureBlock.FACING, Direction.EAST));
+            // A sealed 3x3 vertical shaft, open to direct sky only through its roof.
+            for (BlockPos position : BlockPos.betweenClosed(19, 230, 7, 21, 234, 9)) {
+                boolean boundary = position.getX() == 19 || position.getX() == 21
+                        || position.getZ() == 7 || position.getZ() == 9 || position.getY() == 230;
+                setLightingFixture(position, boundary ? Blocks.STONE.defaultBlockState() : Blocks.AIR.defaultBlockState());
+            }
+            for (int y = SKY_LIGHT_BARRIER.getY() + 1; y <= level.getMaxY(); y++) {
+                setLightingFixture(new BlockPos(SKY_LIGHT_BARRIER.getX(), y, SKY_LIGHT_BARRIER.getZ()), Blocks.AIR.defaultBlockState());
+            }
+            setLightingFixture(SKY_LIGHT_BARRIER, ModBlocks.getBlock(wall.id()).defaultBlockState().setValue(FurnitureBlock.FACING, Direction.WEST));
+            LOGGER.info("RHD_SMOKE_LIGHT_FIXTURE opaque_wall={}; waiting 20 ticks for torch/skylight propagation", wall.id());
+        }));
+        steps.add(new Step(20, () -> {
+            int source = light(LightLayer.BLOCK, BLOCK_LIGHT_BARRIER.north());
+            int blocked = light(LightLayer.BLOCK, BLOCK_LIGHT_BARRIER.south());
+            int openSky = light(LightLayer.SKY, SKY_LIGHT_BARRIER.above());
+            int blockedSky = light(LightLayer.SKY, SKY_LIGHT_BARRIER.below());
+            LOGGER.info("RHD_SMOKE_LIGHT_OPAQUE source_block={} target_block={} open_sky={} target_sky={}", source, blocked, openSky, blockedSky);
+            check(source == 15, "Isolated block-light fixture has an active glowstone source");
+            check(blocked == 0, "Structural wall prevents real block light entering the sealed tunnel target");
+            check(openSky == 15, "Skylight fixture has direct full sky above its roof");
+            check(blockedSky == 0, "Structural wall roof prevents real skylight entering the sealed shaft");
+            setLightingFixture(BLOCK_LIGHT_BARRIER, Blocks.GLASS.defaultBlockState());
+            setLightingFixture(SKY_LIGHT_BARRIER, Blocks.GLASS.defaultBlockState());
+        }));
+        steps.add(new Step(20, () -> {
+            int transmitted = light(LightLayer.BLOCK, BLOCK_LIGHT_BARRIER.south());
+            int transmittedSky = light(LightLayer.SKY, SKY_LIGHT_BARRIER.below());
+            LOGGER.info("RHD_SMOKE_LIGHT_GLASS target_block={} target_sky={}", transmitted, transmittedSky);
+            check(transmitted > 0, "Replacing only the structural barrier with glass admits block light into the same sealed target");
+            check(transmittedSky == 15, "Replacing only the structural roof with glass admits full skylight into the same sealed shaft");
+            for (BlockPos position : BlockPos.betweenClosed(23, 219, 7, 25, 221, 11)) {
+                setLightingFixture(position, Blocks.AIR.defaultBlockState());
+            }
+            for (BlockPos position : BlockPos.betweenClosed(19, 230, 7, 21, 234, 9)) {
+                setLightingFixture(position, Blocks.AIR.defaultBlockState());
+            }
+            LOGGER.info("RHD_SMOKE_LIGHT_PASS opaque and glass-control propagation checks completed; fixtures removed");
+        }));
+    }
+
+    private void setLightingFixture(BlockPos position, BlockState state) {
+        level.setBlock(position, state, Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+    }
+
+    private int light(LightLayer layer, BlockPos position) {
+        return level.getLightEngine().getLayerListener(layer).getLightValue(position);
     }
 
     private void successfulPlacement(FurnitureDefinition definition, Direction facing, BlockPos origin) {

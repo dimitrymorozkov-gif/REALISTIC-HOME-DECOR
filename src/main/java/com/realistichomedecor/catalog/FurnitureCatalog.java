@@ -51,6 +51,14 @@ public final class FurnitureCatalog {
                 if (!Set.of("solid", "cutout", "translucent").contains(renderLayer)) {
                     throw new IllegalArgumentException("Invalid render layer: " + id);
                 }
+                // Structural wall metadata is explicit; wall clocks, shelves and
+                // other decorative wall_* IDs must keep their ordinary lighting.
+                boolean structuralWall = entry.has("wall_family");
+                if (structuralWall && (!entry.get("wall_family").isJsonPrimitive()
+                        || entry.get("wall_family").getAsString().isBlank()
+                        || !category.equals("building_materials") || !renderLayer.equals("solid"))) {
+                    throw new IllegalArgumentException("Invalid structural wall metadata: " + id);
+                }
                 List<FurnitureDefinition.Part> parts = new ArrayList<>();
                 Set<GridOffset> positions = new HashSet<>();
                 for (JsonElement partElement : entry.getAsJsonArray("parts")) {
@@ -81,7 +89,7 @@ public final class FurnitureCatalog {
                 }
                 if (connect && parts.size() != 1) throw new IllegalArgumentException("Connecting furniture must occupy one cell: " + id);
                 definitions.add(new FurnitureDefinition(id, entry.get("template").getAsString(), category,
-                        placement, luminance, connect, renderLayer, parts));
+                        placement, luminance, connect, renderLayer, structuralWall, parts));
             }
             if (definitions.isEmpty()) throw new IllegalArgumentException("The furniture catalog is empty");
             return List.copyOf(definitions);

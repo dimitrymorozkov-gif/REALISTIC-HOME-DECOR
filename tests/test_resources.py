@@ -195,6 +195,11 @@ class ResourceFixture(unittest.TestCase):
         self.save_catalog()
         self.assert_invalid("invalid collision box")
 
+    def test_collision_budget_excess_fails(self) -> None:
+        self.catalog["entries"][0]["parts"][0]["boxes"] = [[1, 1, 1, 2, 2, 2]] * 13
+        self.save_catalog()
+        self.assert_invalid("collision budget")
+
     def test_collision_outside_cell_fails(self) -> None:
         self.catalog["entries"][0]["parts"][0]["boxes"][0] = [0, 0, 0, 17, 8, 4]
         self.save_catalog()

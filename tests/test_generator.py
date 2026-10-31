@@ -34,7 +34,7 @@ class GeneratorCli(unittest.TestCase):
         first_manifest = (self.root / MANIFEST).read_bytes()
         for relative, expected_digest in json.loads(first_manifest).items():
             self.assertEqual(expected_digest, hashlib.sha256((self.root / relative).read_bytes()).hexdigest(), relative)
-        self.assertEqual(20, len(json.loads((self.root / CATALOG).read_text())["entries"]))
+        self.assertEqual(40, len(json.loads((self.root / CATALOG).read_text())["entries"]))
         result = self.generate()
         self.assertEqual(0, result.returncode, result.stderr)
         self.assertEqual(first_manifest, (self.root / MANIFEST).read_bytes())
@@ -86,7 +86,7 @@ class GeneratorCli(unittest.TestCase):
         stale = before - after
         self.assertTrue(stale)
         self.assertTrue(all(not (self.root / relative).exists() for relative in stale))
-        self.assertEqual(20, len(json.loads((self.root / CATALOG).read_text())["entries"]))
+        self.assertEqual(40, len(json.loads((self.root / CATALOG).read_text())["entries"]))
 
 
 if __name__ == "__main__":

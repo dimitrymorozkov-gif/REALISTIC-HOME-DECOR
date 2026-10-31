@@ -1,8 +1,8 @@
 # Каталог Realistic Home Decor
 
-80 разных конструкций × 4 согласованных палитры = **320 предметов**.
+120 разных конструкций × 8 согласованных палитр = **960 предметов**.
 
-Палитры: натуральный дуб; орех и латунь; эбен и графит; слоновая кость и берёза.
+Палитры: Натуральный дуб (`oak`); Орех и латунь (`walnut`); Эбен и графит (`ebony`); Слоновая кость и берёза (`ivory`); Шалфей и сосна (`sage`); Терракота и медь (`terracotta`); Песок и шампань (`sand`); Сланец и стальной синий (`slate`).
 
 | ID конструкции | English | Русский | Категория | Ячеек |
 |---|---|---|---|---:|
@@ -86,6 +86,46 @@
 | `toolbox` | Portable toolbox | Ящик для инструментов | garage | 1 |
 | `storage_crate` | Reinforced storage crate | Усиленный декоративный ящик | garage | 1 |
 | `garage_door` | Static sectional garage door | Декоративные гаражные ворота | garage | 4 |
+| `wall_running_brick` | Running-bond brick wall | Стена с ложковой кладкой | building_materials | 1 |
+| `wall_stack_brick` | Stack-bond brick wall | Стена с прямой кирпичной кладкой | building_materials | 1 |
+| `wall_flemish_bond` | Flemish-bond brick wall | Стена с фламандской кладкой | building_materials | 1 |
+| `wall_english_bond` | English-bond brick wall | Стена с английской кладкой | building_materials | 1 |
+| `wall_soldier_brick` | Soldier-course brick wall | Стена с вертикальной кладкой | building_materials | 1 |
+| `wall_basket_brick` | Basket-weave brick wall | Стена с плетёной кирпичной кладкой | building_materials | 1 |
+| `wall_herringbone_brick` | Herringbone brick wall | Кирпичная стена ёлочкой | building_materials | 1 |
+| `wall_rusticated_brick` | Rusticated masonry wall | Стена с рельефным рустом | building_materials | 1 |
+| `wall_roman_brick` | Roman brick wall | Стена из длинного римского кирпича | building_materials | 1 |
+| `wall_breeze_brick` | Recessed breeze-block wall | Стена с нишами бриз-блоков | building_materials | 1 |
+| `wall_ashlar_stone` | Coursed ashlar stone wall | Стена из тесаного камня | building_materials | 1 |
+| `wall_dry_stone` | Dry-stacked stone wall | Стена сухой каменной кладки | building_materials | 1 |
+| `wall_cyclopean_stone` | Irregular mosaic stone wall | Стена из разновеликого камня | building_materials | 1 |
+| `wall_slate_ledger` | Split-face stone ledger wall | Стена из колотых каменных ламелей | building_materials | 1 |
+| `wall_travertine_bands` | Banded stone wall with inlays | Каменная стена с горизонтальными вставками | building_materials | 1 |
+| `wall_quoin_stone` | Stone quoin and plaster wall | Стена с каменными рустовыми блоками | building_materials | 1 |
+| `wall_large_stone_panels` | Large-format stone panel wall | Стена с крупноформатными каменными панелями | building_materials | 1 |
+| `wall_standing_seam_metal` | Standing-seam metal wall | Стена из фальцевых металлических панелей | building_materials | 1 |
+| `wall_metal_cassettes` | Recessed metal cassette wall | Стена из металлических кассет | building_materials | 1 |
+| `wall_steel_grid_stone` | Steel-grid stone wall | Каменная стена в металлической решётке | building_materials | 1 |
+| `wall_wood_vertical_slats` | Vertical timber slat wall | Стена с вертикальными деревянными рейками | building_materials | 1 |
+| `wall_wood_board_batten` | Board-and-batten wall | Стена из досок с нащельниками | building_materials | 1 |
+| `wall_wood_shiplap` | Horizontal shiplap wall | Стена с горизонтальной обшивкой внахлёст | building_materials | 1 |
+| `wall_wood_coffered` | Timber coffered wall | Деревянная кессонная стена | building_materials | 1 |
+| `wall_wood_wainscot` | Timber wainscot wall | Стена с деревянными панелями и цоколем | building_materials | 1 |
+| `wall_wood_basket_parquet` | Basket-weave timber wall | Деревянная стена с плетёным паркетным узором | building_materials | 1 |
+| `wall_concrete_formwork` | Formwork concrete wall with tie recesses | Бетонная стена со следами опалубки и стяжек | building_materials | 1 |
+| `wall_concrete_fluted` | Broad-fluted concrete wall | Бетонная стена с широкими каннелюрами | building_materials | 1 |
+| `wall_concrete_stepped_fins` | Stepped concrete fin wall | Бетонная стена со ступенчатыми рёбрами | building_materials | 1 |
+| `wall_concrete_deep_coffers` | Deep-coffered concrete wall | Бетонная стена с глубокими кессонами | building_materials | 1 |
+| `wall_concrete_staggered_precast` | Staggered precast concrete wall | Стена из сборных бетонных панелей со смещением | building_materials | 1 |
+| `wall_concrete_vertical_channel` | Channelled concrete wall | Бетонная стена с глубоким вертикальным каналом | building_materials | 1 |
+| `wall_plaster_picture_frame` | Picture-molding plaster wall | Штукатурная стена с узким рамочным молдингом | building_materials | 1 |
+| `wall_plaster_stepped_arch` | Stepped arched niche wall | Штукатурная стена со ступенчатой арочной нишей | building_materials | 1 |
+| `wall_plaster_recessed_rectangles` | Asymmetric recessed plaster wall | Штукатурная стена с асимметричными прямоугольными нишами | building_materials | 1 |
+| `wall_plaster_pyramid_tiles` | Stepped pyramid tile wall | Стена со ступенчатыми пирамидальными панелями | building_materials | 1 |
+| `wall_plaster_stepped_chevron` | Stepped chevron relief wall | Стена со ступенчатым шевронным рельефом | building_materials | 1 |
+| `wall_acoustic_baffles` | Staggered acoustic baffle wall | Стена с акустическими ламелями разной длины | building_materials | 1 |
+| `wall_acoustic_checker` | Acoustic checkerboard relief wall | Стена с шахматным акустическим рельефом | building_materials | 1 |
+| `wall_plaster_geometric_cross` | Geometric cross relief wall | Штукатурная стена с геометрическим крестообразным рельефом | building_materials | 1 |
 
 Полный ID предмета: `realistic_home_decor:<конструкция>_<палитра>`. Например: `realistic_home_decor:modern_chair_oak`.
 

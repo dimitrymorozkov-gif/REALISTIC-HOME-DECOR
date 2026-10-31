@@ -1,0 +1,118 @@
+{
+  "version": "0.2.0",
+  "date_local": "2026-10-31",
+  "timezone": "Europe/Moscow",
+  "basis_commit": "499a9bd5d82bfcc6534722e018999f0a5729217e",
+  "catalog": {
+    "designs": 120,
+    "palettes": 8,
+    "items": 960,
+    "new_wall_designs": 40,
+    "new_wall_variants": 320,
+    "block_cells": 1400,
+    "legacy_ids_preserved": 320,
+    "materials": 82,
+    "models": 2790
+  },
+  "unit_tests": {
+    "passed": 75,
+    "skipped": 0
+  },
+  "minecraft_smoke": {
+    "assertions": 30031,
+    "actual_placements": 985,
+    "wall_states_checked": 1280,
+    "preserved_furniture_states": 4800,
+    "transparent_states": 672,
+    "opaque_target_block_light": 0,
+    "opaque_target_sky_light": 0,
+    "glass_control_block_light": 13,
+    "glass_control_sky_light": 15
+  },
+  "production": {
+    "version": "0.2.0",
+    "artifact_sha256": "daa9324a379056daeee9d81750db014f8aa9373beb976c1a41b27f3507fa2538",
+    "catalog_sha256": "0feb36998bdcccc9a83dd10b8a0aa046dd8417627194261391386c2164f246dd",
+    "items": 960,
+    "cells": 1400,
+    "categories": 11,
+    "legacy_ids_preserved": 320,
+    "fixture_width": 159,
+    "fixture_depth": 159,
+    "forced_chunks": 100,
+    "target": [
+      {
+        "id": "modern_sofa_oak",
+        "position": [
+          82,
+          81,
+          2
+        ]
+      },
+      {
+        "id": "modern_sofa_oak_part_1",
+        "position": [
+          83,
+          81,
+          2
+        ]
+      }
+    ],
+    "status": "passed",
+    "ordinary_production_launcher": true,
+    "dev_testmods_loaded": false,
+    "initial_native_fixture": "passed",
+    "save_shutdown_restart_reload": "passed",
+    "primary_destroy_cleanup": "passed",
+    "secondary_destroy_cleanup": "passed",
+    "minecraft": "1.21.11",
+    "fabric_loader": "0.20.1",
+    "fabric_api": "0.141.6+1.21.11"
+  },
+  "release": {
+    "root_file": "realistic-home-decor-0.2.0.jar",
+    "bytes": 3064709,
+    "sha256": "daa9324a379056daeee9d81750db014f8aa9373beb976c1a41b27f3507fa2538",
+    "git_ignored": false,
+    "test_classes_in_release": false
+  },
+  "limits": [
+    "Specific third-party modpacks and shaders were not tested.",
+    "No gaming GPU FPS measurements for version0.2.0; previous performance figures belong to0.1.0."
+  ],
+  "visual": {
+    "status": "PASSED",
+    "release_sha256": "daa9324a379056daeee9d81750db014f8aa9373beb976c1a41b27f3507fa2538",
+    "gallery": {
+      "origin": [
+        256,
+        81,
+        256
+      ],
+      "wall_templates": 40,
+      "palette_variants": 320,
+      "expected_display_blocks": 680,
+      "missing_display_blocks": 0,
+      "manifest": "build/wall-gallery/gallery_manifest.json"
+    },
+    "visual_findings": {
+      "recessed_concrete_in_full_sun": "PASS: normally visible; prior black self-darkening removed",
+      "wood_and_masonry": "PASS: geometry, material textures and palette surfaces visible",
+      "ambient_occlusion_on": "PASS",
+      "ambient_occlusion_off": "PASS: normal flat lighting; actual options UI verified ao:false",
+      "night_control": "PASS: surfaces darken naturally with the night sky; no forced full-bright appearance",
+      "ambient_occlusion_restored": true,
+      "missing_model_texture_resource_errors": []
+    },
+    "curated_raw_screenshots": [
+      "docs/screenshots/walls-0.2-overview.png",
+      "docs/screenshots/walls-0.2-details.png",
+      "docs/screenshots/walls-0.2-palettes.png"
+    ],
+    "limitations": [
+      "The native test server uses view-distance=2; the curated final overview uses a closer gallery view. The complete 40-bay geometry had already been reviewed on R1 with identical graphical resources.",
+      "No new FPS benchmark; no exhaustive night check of every palette variant."
+    ],
+    "capture": "Raw unedited X11 screenshots, 1280x900, software OpenGL"
+  }
+}

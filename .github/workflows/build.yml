@@ -1,4 +1,4 @@
-name: Build and validate
+name: Build installable Fabric mod
 
 on:
   push:
@@ -23,9 +23,13 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Check generated resources are current
         run: python3 tools/furniture_generator/generate.py --check
-      - name: Build, validate assets, and test geometry
+      - name: Build, validate, test, and package the installable mod
         run: ./gradlew --no-daemon build
-      - uses: actions/upload-artifact@v4
+      - name: Upload installable mod and checksum
+        uses: actions/upload-artifact@v4
         with:
-          name: realistic-home-decor
-          path: build/libs/*.jar
+          name: realistic-home-decor-minecraft-1.21.11
+          path: |
+            build/distributions/release/*.jar
+            build/distributions/release/SHA256SUMS
+          if-no-files-found: error

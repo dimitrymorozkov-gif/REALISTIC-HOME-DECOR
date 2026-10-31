@@ -72,7 +72,7 @@ loom {
             server()
             name 'Furniture server integration checks'
             source sourceSets.smokeTest
-            runDir 'run/smoke-server'
+            runDir "run/smoke-server-${project.version}"
             programArg 'nogui'
         }
     }
@@ -143,3 +143,67 @@ publishing {
         }
     }
 }
+
+// End-user downloads contain the production remapped mod and its checksum only.
+// A dedicated directory prevents old versions or development/source JARs entering CI artifacts.
+def releaseJar = tasks.named('remapJar').flatMap { it.archiveFile }
+def releaseDirectory = layout.buildDirectory.dir('distributions/release')
+def rootReleaseJar = layout.projectDirectory.file(
+    "${project.archives_base_name}-${project.version}.jar")
+
+tasks.register('packageRelease', Sync) {
+    group = 'distribution'
+    description = 'Package the installable Fabric mod JAR and SHA256SUMS for download.'
+    dependsOn tasks.named('remapJar'), tasks.named('check')
+    from releaseJar
+    into releaseDirectory
+    outputs.file(rootReleaseJar)
+
+    doFirst {
+        new java.util.zip.ZipFile(releaseJar.get().asFile).withCloseable { archive ->
+            def descriptor = archive.getEntry('fabric.mod.json')
+            if (descriptor == null) {
+                throw new GradleException('The release JAR has no Fabric mod descriptor.')
+            }
+            def metadata = archive.getInputStream(descriptor).withCloseable { input ->
+                new groovy.json.JsonSlurper().parse(input)
+            }
+            if (metadata.id != 'realistic_home_decor' || metadata.version != project.version.toString()) {
+                throw new GradleException('The release JAR has an unexpected mod ID or version.')
+            }
+            def leakedDiagnostics = archive.entries().findAll { entry ->
+                entry.name.startsWith('com/realistichomedecor/smoke/') ||
+                    entry.name.startsWith('com/realistichomedecor/clientmetrics/')
+            }
+            if (!leakedDiagnostics.isEmpty()) {
+                throw new GradleException('Development diagnostics must not be included in the release JAR.')
+            }
+        }
+    }
+
+    doLast {
+        def installableJar = releaseDirectory.get().file(releaseJar.get().asFile.name).asFile
+        def digest = java.security.MessageDigest.getInstance('SHA-256')
+        installableJar.withInputStream { input ->
+            byte[] buffer = new byte[65536]
+            int count
+            while ((count = input.read(buffer)) != -1) {
+                digest.update(buffer, 0, count)
+            }
+        }
+        def checksum = digest.digest().encodeHex().toString()
+        releaseDirectory.get().file('SHA256SUMS').asFile.setText(
+            "${checksum}  ${installableJar.name}\n", 'UTF-8')
+        java.nio.file.Files.copy(installableJar.toPath(), rootReleaseJar.asFile.toPath(),
+            java.nio.file.StandardCopyOption.REPLACE_EXISTING)
+        if (java.nio.file.Files.mismatch(installableJar.toPath(), rootReleaseJar.asFile.toPath()) != -1L) {
+            throw new GradleException('The repository-root release JAR differs from the verified artifact.')
+        }
+        logger.lifecycle("Repository-root installable mod: ${rootReleaseJar.asFile}")
+        logger.lifecycle("Installable Fabric mod: ${installableJar}")
+        logger.lifecycle("SHA-256: ${checksum}")
+        logger.lifecycle("Checksums: ${releaseDirectory.get().file('SHA256SUMS').asFile}")
+    }
+}
+
+tasks.named('assemble') { dependsOn tasks.named('packageRelease') }

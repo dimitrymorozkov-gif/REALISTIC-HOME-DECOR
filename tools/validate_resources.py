@@ -448,6 +448,8 @@ class Validator:
                 if not isinstance(boxes, list):
                     self.error(catalog_path, f"{part_id}: collision boxes must be an array")
                 else:
+                    if len(boxes) > 12:
+                        self.error(catalog_path, f"{part_id}: collision budget exceeds twelve boxes per cell")
                     for box in boxes:
                         if (not _vec(box, 6) or any(not 0 <= n <= 16 for n in box)
                                 or any(a >= b for a, b in zip(box[:3], box[3:]))):
@@ -462,6 +464,8 @@ class Validator:
                             if not isinstance(state_boxes, list):
                                 self.error(catalog_path, f"{part_id}: {state} connection boxes must be an array")
                                 continue
+                            if len(state_boxes) > 12:
+                                self.error(catalog_path, f"{part_id}: {state} collision budget exceeds twelve boxes per cell")
                             for box in state_boxes:
                                 if (not _vec(box, 6) or any(not 0 <= n <= 16 for n in box)
                                         or any(a >= b for a, b in zip(box[:3], box[3:]))):
